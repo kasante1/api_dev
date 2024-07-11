@@ -16,7 +16,7 @@ class PostValidator(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 async def create_posts(payLoad: PostValidator):
     return {"data": payLoad}
 
