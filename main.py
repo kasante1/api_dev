@@ -16,7 +16,7 @@ class PostValidator(BaseModel):
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 async def create_posts(payLoad: PostValidator):
     return {"data": payLoad}
 
@@ -24,7 +24,7 @@ async def create_posts(payLoad: PostValidator):
 async def get_post(id: int, response: Response):
     # response.status_code = status.HTTP_404_NOT_FOUND
     raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND
+        status_code=status.HTTP_404_NOT_FOUND,
         detail=f"post with id: {id} was not found"
     )
 
