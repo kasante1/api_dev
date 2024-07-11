@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
@@ -22,7 +22,12 @@ async def create_posts(payLoad: PostValidator):
 
 @app.get("/posts/{id}")
 async def get_post(id: int, response: Response):
-    response.status_code = status.HTTP_404_NOT_FOUND
+    # response.status_code = status.HTTP_404_NOT_FOUND
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND
+        detail=f"post with id: {id} was not found"
+    )
+
     
     return {"post details": f"{id}"}
 
