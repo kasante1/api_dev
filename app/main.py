@@ -4,8 +4,9 @@ from pydantic import BaseModel
 from typing import Optional
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from .config import DBConnDetails
+from . import config
 import time
+from functools import lru_cache
 
 
 app = FastAPI()
@@ -16,27 +17,31 @@ class PostValidator(BaseModel):
     published: bool = True
     rating: Optional[int] = None
 
-db_connection_details = DBConnDetails(_env_file='.env', _env_file_encoding='utf-8')
+@lru_cache
+def get_db_settings():
+    return config.DBConnDetails(_env_file='.env', _env_file_encoding='utf-8')
+
+conn_details = get_db_settings()
 
 # while True:
 try:
     conn = psycopg2.connect(
-        host=db_connection_details.host,
-        database=db_connection_details.database,
-        user=db_connection_details.databaseuser,
-        password=db_connection_details.password,
+        host=conn_details.host,
+        database=conn_details.database,
+        user=conn_details.databaseuser,
+        password=conn_details.password,
         cursor_factory=RealDictCursor
     )
 
-    # cursor = conn.cursor()
+    cursor = conn.cursor()
     print("Database connection was successful!")
-    # break
+        # break
 except KeyboardInterrupt:
     print("Connection terminated manually !!!")
 except Exception as error:
     print("Connecting to the database failed!")
     print("Error: ", error)
-    # time.sleep(2)
+        # time.sleep(3)
 
 @app.get("/")
 async def root():
