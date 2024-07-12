@@ -23,25 +23,26 @@ def get_db_settings():
 
 conn_details = get_db_settings()
 
-# while True:
-try:
-    conn = psycopg2.connect(
-        host=conn_details.host,
-        database=conn_details.database,
-        user=conn_details.databaseuser,
-        password=conn_details.password,
-        cursor_factory=RealDictCursor
-    )
+while True:
+    try:
+        conn = psycopg2.connect(
+            host=conn_details.host,
+            database=conn_details.database,
+            user=conn_details.databaseuser,
+            password=conn_details.password,
+            cursor_factory=RealDictCursor
+        )
 
-    cursor = conn.cursor()
-    print("Database connection was successful!")
-        # break
-except KeyboardInterrupt:
-    print("Connection terminated manually !!!")
-except Exception as error:
-    print("Connecting to the database failed!")
-    print("Error: ", error)
-        # time.sleep(3)
+        cursor = conn.cursor()
+        print("Database connection was successful!")
+        break
+    except KeyboardInterrupt:
+        print("Connection terminated manually !!!")
+        break
+    except Exception as error:
+        print("Connecting to the database failed!")
+        print("Error: ", error)
+        time.sleep(3)
 
 @app.get("/")
 async def root():
