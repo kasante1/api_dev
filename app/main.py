@@ -2,6 +2,10 @@ from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.params import Body
 from pydantic import BaseModel
 from typing import Optional
+import psycopg2
+from psycopg2.extras import RealDictCursor
+from .config import DBConnDetails
+import time
 
 
 app = FastAPI()
@@ -11,6 +15,28 @@ class PostValidator(BaseModel):
     content: str
     published: bool = True
     rating: Optional[int] = None
+
+db_connection_details = DBConnDetails(_env_file='.env', _env_file_encoding='utf-8')
+
+# while True:
+try:
+    conn = psycopg2.connect(
+        host=db_connection_details.host,
+        database=db_connection_details.database,
+        user=db_connection_details.databaseuser,
+        password=db_connection_details.password,
+        cursor_factory=RealDictCursor
+    )
+
+    # cursor = conn.cursor()
+    print("Database connection was successful!")
+    # break
+except KeyboardInterrupt:
+    print("Connection terminated manually !!!")
+except Exception as error:
+    print("Connecting to the database failed!")
+    print("Error: ", error)
+    # time.sleep(2)
 
 @app.get("/")
 async def root():
