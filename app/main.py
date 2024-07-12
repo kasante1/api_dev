@@ -30,9 +30,19 @@ def test_endpoints(db: Session = Depends(get_db)):
 async def root():
     return {"message": "Hello World"}
 
+@app.get("/posts")
+async def get_posts(db: Session = Depends(get_db)):
+    posts = db.query(models.Post).all()
+    return {"data": posts}
+
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
-async def create_posts(payLoad: PostValidator):
-    return {"data": payLoad}
+async def create_posts(post: PostValidator, db: Session = Depends(get_db)):
+    new_post = models.Post(title=post.title, content=post.content, published=post.published)
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+
+    return {"data": new_post}
 
 @app.get("/posts/{id}")
 async def get_post(id: int, response: Response):
