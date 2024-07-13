@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
-from fastapi.params import Body
+from fastapi import status, HTTPException, Depends, APIRouter
 from .. import schemas
 from typing import List
 
@@ -31,7 +30,6 @@ def create_posts(post: schemas.CreatePost, db: Session = Depends(get_db)):
 @router.get("/{id}", response_model=schemas.Post)
 def get_post(id: int, db: Session = Depends(get_db)):
 
-    # response.status_code = status.HTTP_404_NOT_FOUND
     post = db.query(models.Post).filter(
         models.Post.id == id
     ).first()
