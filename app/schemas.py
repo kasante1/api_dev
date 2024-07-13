@@ -21,6 +21,14 @@ class Post(PostSchema):
     class ConfigDict:
         orm_mode = True
 
-class User(BaseModel):
+class CreateUser(BaseModel):
     email: EmailStr
     password: str
+
+class User(BaseModel):
+    id: int
+    email: EmailStr
+    created_at: datetime
+
+    class ConfigDict:
+        orm_mode = True
