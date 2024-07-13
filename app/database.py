@@ -3,9 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from . import config
 
-
-db_url = config.DBConnUrl(_env_file='.env', _env_file_encoding='utf-8')
-DATABASE_URL = db_url.databaseurl
+DATABASE_URL = config.application_env.POSTGRES_DATABASE_URL
 
 engine = create_engine(
     DATABASE_URL

@@ -32,3 +32,9 @@ class User(BaseModel):
 
     class ConfigDict:
         orm_mode = True
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+# class TokenD(BaseModel):
