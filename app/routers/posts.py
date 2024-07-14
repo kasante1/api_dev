@@ -22,8 +22,6 @@ def get_all_posts(db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"no post(s) found"
         )
-    
-    # print("helllo", posts)
     return  posts
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
