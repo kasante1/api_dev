@@ -5,6 +5,7 @@ class PostSchema(BaseModel):
     title: str
     content: str
     published: bool = True
+
  
 
 class CreatePost(PostSchema):
@@ -17,9 +18,11 @@ class UpdatePost(PostSchema):
 class Post(PostSchema):
     id: int
     created_at: datetime
+    owner_id: int
 
     class ConfigDict:
         orm_mode = True
+
 
 class CreateUser(BaseModel):
     email: EmailStr
@@ -37,4 +40,12 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
-# class TokenD(BaseModel):
+class Token(BaseModel):
+    id: int
+
+class TokenData(BaseModel):
+    access_token: str
+    token_type: str
+
+class PublicPost(Post):
+    owner: User
