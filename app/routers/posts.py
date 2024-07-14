@@ -1,6 +1,6 @@
 from fastapi import status, HTTPException, Depends, APIRouter
 from .. import schemas
-from typing import List
+from typing import List, Optional
 
 
 from .. import models, utils, oauth
@@ -14,8 +14,13 @@ router = APIRouter(
 
 
 @router.get("/public-posts", response_model=List[(schemas.PublicPost)])
-def get_all_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Post).all()
+def get_all_posts(
+    db: Session = Depends(get_db),
+    limit: int = 10,
+    skip: int = 0,
+    search: Optional[str] = "" ):
+
+    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
 
     if not posts:
         raise HTTPException(
