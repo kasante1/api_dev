@@ -11,7 +11,6 @@ router = APIRouter(
 )
 
 @router.post("/", status_code=status.HTTP_201_CREATED,
-            #   response_model=schemas.User
             )
 def vote(vote: schemas.Votes, db: Session = Depends(get_db),
          current_user = Depends(oauth.get_current_user)):
