@@ -6,28 +6,30 @@ from typing import List, Optional
 from .. import models, utils, oauth
 from ..database import engine, get_db
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 
 router = APIRouter(
     prefix="/posts",
     tags=['Posts']
 )
 
-
-@router.get("/public-posts", response_model=List[(schemas.PublicPost)])
+@router.get("/public-posts")
 def get_all_posts(
     db: Session = Depends(get_db),
     limit: int = 10,
     skip: int = 0,
     search: Optional[str] = "" ):
 
-    posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
+    posts = db.query(models.Post, func.count(models.Votes.post_id).label("votes")).join(
+        models.Votes, models.Votes.post_id == models.Post.id, isouter=True).group_by(
+            models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
 
     if not posts:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"no post(s) found"
         )
-    return  posts
+    return  [{"Post": post, "votes": votes} for post, votes in posts]
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(

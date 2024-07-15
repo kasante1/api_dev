@@ -49,3 +49,10 @@ class TokenData(BaseModel):
 
 class PublicPost(Post):
     owner: User
+
+class Votes(BaseModel):
+    post_id: int
+    vote: int
+
+class PostWithVotes(PublicPost):
+    votes: int
