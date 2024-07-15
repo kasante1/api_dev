@@ -3,7 +3,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from . import config
 
-DATABASE_URL = config.application_env.POSTGRES_DATABASE_URL
+app_env = config.application_env
+
+DATABASE_URL = f"{app_env.DATABASE_TYPE}://{app_env.DATABASE_USER_NAME}:{app_env.DATABASE_PASSWORD}@{app_env.DATABASE_PORT}/{app_env.DATABASE_NAME}"
 
 engine = create_engine(
     DATABASE_URL
