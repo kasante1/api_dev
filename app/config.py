@@ -17,6 +17,7 @@ class ApplicationEnv(BaseSettings):
     DATABASE_TYPE: str = os.getenv("DATABASE_HOSTNAME")
     DATABASE_PORT: str = os.getenv("DATABASE_PORT")
     DATABASE_USER_NAME: str = os.getenv("DATABASE_USER_NAME")
+    DATABASE_HOST: str = os.getenv("DATABASE_HOST")
 
 
 application_env = ApplicationEnv()
