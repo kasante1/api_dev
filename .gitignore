@@ -1,3 +1,6 @@
 .env
 api_dev_venv
 __pycache__/
+.scannerwork
+sonar-project.properties
+sonar_lock
